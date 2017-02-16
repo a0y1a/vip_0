@@ -56,7 +56,7 @@ namespace KeKeSoftPlatform.App.Controllers
         }
 
         #endregion
-
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
         #region 首页
         public ActionResult Home()
         {
@@ -1777,45 +1777,20 @@ namespace KeKeSoftPlatform.App.Controllers
             return View();
         }
 
-        [HttpPost]
-        public ActionResult Test(Guid testId, string imgUrlList)
+        public ActionResult Test2()
         {
-            using (KeKeSoftPlatformDbContext db = new KeKeSoftPlatformDbContext())
-            {
-                var test = db.Test.Find(testId);
-                List<string> oldImgUrlList = new List<string>(), newImgUrlList = new List<string>();
-                if (string.IsNullOrWhiteSpace(test.ImgUrl) == false)
-                {
-                    oldImgUrlList.AddRange(test.ImgUrl.Split(new string[] { "///" }, StringSplitOptions.RemoveEmptyEntries).ToList());
-                }
-                if (string.IsNullOrWhiteSpace(imgUrlList) == false)
-                {
-                    newImgUrlList.AddRange(imgUrlList.Split(new string[] { "///" }, StringSplitOptions.RemoveEmptyEntries).ToList());
-                }
-                //删除原有文件
-                foreach (var item in oldImgUrlList.Except(newImgUrlList))
-                {
-                    var filePath = Server.MapPath(@"~{0}".FormatString(item));
-                    if (System.IO.File.Exists(filePath))
-                    {
-                        System.IO.File.Delete(filePath);
-                    }
-                }
-                test.ImgUrl = imgUrlList;
-                db.SaveChanges();
-                return RedirectToAction("Test");
-            }
+            return View();
         }
 
-        //[HttpPost]
-        //public ActionResult Test(TestData model)
-        //{
-        //    if(ModelState.IsValid == false)
-        //    {
-        //        return View(model);
-        //    }
-        //    return RedirectToAction("Test");
-        //}
+        [HttpPost]
+        public ActionResult Test(TestData model)
+        {
+            if (ModelState.IsValid == false)
+            {
+                return View(model);
+            }
+            return RedirectToAction("Test");
+        }
 
         [HttpPost]
         public JsonResult ProcessStudent()

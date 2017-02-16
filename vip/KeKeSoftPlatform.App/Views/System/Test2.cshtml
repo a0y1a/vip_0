@@ -1,0 +1,70 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <style type="text/css">
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        body {
+            background: #ccc;
+            padding: 2em 10%;
+            font-family: Arial;
+        }
+
+        h1 {
+            font-weight: bold;
+        }
+
+        select {
+            margin-top: 10px;
+            margin-bottom: 10px;
+            width: 130px;
+            background: #ddd;
+        }
+
+        img {
+            display: block;
+            width: 240px;
+            height: 220px;
+            clear: both;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="gallery">
+        <h1>This is my gallery.</h1>
+        select image:
+        <select>
+            <option value="/images/01.gif" title="flower">01.gif</option>
+            <option value="/images/02.jpg" title="university">02.jpg</option>
+            <option value="/images/03.jpg" title="cartoon">03.jpg</option>
+        </select>
+        @*<ul>
+                <li><a href="/images/01.gif" title="flower" v-on:click.prevent="vClickEvent($event)">01.gif</a></li>
+                <li><a href="/images/02.jpg" title="university" v-on:click.prevent="vClickEvent($event)">02.jpg</a></li>
+                <li><a href="/images/03.jpg" title="cartoon" v-on:click.prevent="vClickEvent($event)">03.jpg</a></li>
+            </ul>*@
+        <img src="" alt="no images" />
+        <p id="imageTitle">choose an image</p>
+        <input type="text" value="test" id="test"/>
+    </div>
+</body>
+</html>
+
+<script type="text/javascript" src="/Scripts/jquery-2.2.1.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        var input = document.getElementById("test");
+        for(var item in input) {
+            console.info(item)
+        }
+    })
+</script>

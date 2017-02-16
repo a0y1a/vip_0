@@ -201,6 +201,9 @@
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="images\01.gif" />
+    <Content Include="images\02.jpg" />
+    <Content Include="images\03.jpg" />
     <Content Include="images\weui\icon_nav_actionSheet.png" />
     <Content Include="images\weui\icon_nav_article.png" />
     <Content Include="images\weui\icon_nav_button.png" />
@@ -369,6 +372,7 @@
     <Content Include="Views\System\UploadifySecond.cshtml" />
     <Content Include="Scripts\jquery-1.9.1.min.map" />
     <Content Include="Scripts\jquery-2.2.1.min.map" />
+    <Content Include="Views\System\Test2.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KeKeSoftPlatform.Common\KeKeSoftPlatform.Common.csproj">
