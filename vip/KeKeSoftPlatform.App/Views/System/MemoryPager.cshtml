@@ -1,0 +1,67 @@
+﻿@model TestPager
+
+<style type="text/css">
+    th, td{
+        text-align:center;
+    }
+</style>
+
+<table class="table table-bordered">
+    <thead>
+        <tr style="background:rgb(227,239,251)">
+            <th><input type="checkbox" id="tableCheck" /></th>
+            <th>编码</th>
+            <th>名称</th>
+            <th>类型</th>
+            <th>班级人数</th>
+            <th>创建日期</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in Model.ClassList)
+        {
+            <tr><td><input type="checkbox" id="@item.Id" /></td><td>@item.Code</td><td>@item.Name</td><td>@item.Type.EnumMetadataDisplay()</td><td>@item.Student.Count</td><td>@item.CreateDate.ToString("yyyy-MM-dd")</td></tr>
+        }
+    </tbody>
+</table> 
+
+<div style="margin-top: 5px;">
+    <div style="float: left; margin-top: 8px; font-size: 13px;">@("共 {0} 条记录 当前第 {1}/{2} 页 每页 {3} 条".FormatString(Model.ItemCount, Model.PageNum, Model.PageCount, Model.PageSize))</div>
+    <div style="float: right;">
+        @if (Model.PageNum == 1)
+        {
+            <span>首页</span>  <span> | </span>
+            <span>上一页</span>   <span> | </span>
+        }
+        else
+        {
+            <a href="/system/MemoryPager?pageNum=1">首页</a>  <span> | </span>
+            <a href="/system/MemoryPager?pageNum=@(Model.PageNum - 1)">上一页</a> <span> | </span>
+        }
+        @if (Model.PageCount == 0 || Model.PageNum == Model.PageCount)
+        {
+            <span>下一页</span><span> | </span>
+            <span>尾页</span>
+        }
+        else
+        {
+            <a href="/system/MemoryPager?pageNum=@(Model.PageNum + 1)">下一页</a> <span> | </span>
+            <a href="/system/MemoryPager?pageNum=@(Model.PageCount)">尾页</a>
+        }
+        转到第
+        <div class="btn-group">
+            <button class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown">
+                @(Model.PageNum == 0 ? 1 : Model.PageNum) <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-right" style="min-width: 20px;top:auto;bottom:100%;" role="menu">
+                @for (int i = 1; i <= Model.PageCount; i++)
+                {
+                    <li><a href="/system/MemoryPager?pageNum=@(i)">@i.ToString()</a></li>
+                }
+            </ul>
+            页
+        </div>
+
+    </div>
+    <div style="clear: both;"></div>
+</div>

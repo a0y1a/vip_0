@@ -1,0 +1,83 @@
+﻿@model Pager<T_File>
+@{
+    ViewBag.Title = "附件列表";
+    List<string> fileExtensionList = new List<string>() { ".jpg", ".jpeg", ".png", ".bmp", ".gif" };
+    List<SelectListItem> fileTypeList = new List<SelectListItem>() { new SelectListItem { Text = "==全部==", Value = "", Selected = string.IsNullOrWhiteSpace(Request.QueryString["fileType"]) } };
+    List<SelectListItem> sortTypeList = new List<SelectListItem>() { new SelectListItem { Text = "==全部==", Value = "" } };
+    fileTypeList.AddRange(FileType.Uploadify.ToSelectDataSource().Select(m => new SelectListItem { Text = m.Text, Value = m.Value, Selected = !string.IsNullOrWhiteSpace(Request.QueryString["fileType"]) && Request.QueryString["fileType"].ToString() == m.Value }));
+    sortTypeList.AddRange(SortType.First.ToSelectDataSource());
+}
+
+<style type="text/css">
+    td, th{
+        width:14.2857%;
+        vertical-align:middle !important;
+    }
+</style>
+
+<div class="panel panel-success">
+    <div class="panel-heading">uploadify</div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-2">
+                <a href="/System/UploadifyFirst" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span> 上传文件一</a>
+                <img class="thumbnail" src="/Images/uploadifyFirst.png" width="96" height="90" style="margin-top:5px;" />
+            </div>
+            <div class="col-md-2">
+                <a href="/System/UploadifySecond" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span> 上传文件二</a>
+                <img class="thumbnail" src="/Images/uploadifySecond.png" width="96" height="90" style="margin-top:5px;" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-info">
+    <div class="panel-heading">uploadifive</div>
+    <div class="panel-body">
+
+    </div>
+</div>
+
+<div class="panel panel-warning">
+    <div class="panel-heading">weui</div>
+    <div class="panel-body">
+
+    </div>
+</div>
+
+@using(Html.Search())
+{
+    Html.Group("fileType ", Html.DropDownList("fileType", fileTypeList, new { @class = "form-control" }));
+    Html.Group("sortType ", Html.DropDownList("sortType", sortTypeList, new { @class = "form-control" }));
+}
+
+@(Grid.Create<T_File>().SetDataSource(Model.Data).Key(m => m.Id)
+.Column(m => m.Name).Name("文件名称").End()
+.Column(m => m.FileType).Name("插件类型").Value(typeof(FileType)).End()
+.Column(m => m.SortType).Name("排序类型").Value(typeof(SortType)).End()
+.Column(m => m.Url).Name("后缀名").Value(m => System.IO.Path.GetExtension(m.Url)).End()
+.Column(m => m.Url).Name("缩略图").Value(m => fileExtensionList.Any(n => n.Contains(System.IO.Path.GetExtension(m.Url))) ? Html.Image(m.Url, new { width = "60", height = "60" }) : MvcHtmlString.Empty).End()
+.Column(m => m.CreateDate).Name("创建日期").Value(m => m.CreateDate.ToString("yyyy-MM-dd")).End()
+.ActionColumn(m => Html.ActionLink("删除", "DeleteFile", new { fileId = m.Id }, new { onclick = "return confirm('确认删除？')" })).End()
+.Render())
+
+@Html.Page(Model)
+
+<div class="modal fade" id="imgModal" tabindex="-1" role="dialog" aria-labelledby="imgModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <img id="showImgInModal" style="width:100%;"/>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        $(function () {
+            $("img").click(function () {
+                $("#showImgInModal").prop("src", $(this).prop("src"));
+                $("#imgModal").modal();
+            })
+        })
+    </script>
+}

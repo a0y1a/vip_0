@@ -1,0 +1,84 @@
+﻿@model UploadifyFirstData
+@{
+    ViewBag.Title = "UploadifyFirst";
+}
+
+@section head{
+    <link href="/Scripts/uploadify/uploadify.css" rel="stylesheet" />
+}
+
+@using (Html.Form())
+{
+    @Html.HiddenFor(m => m.AddImageList)
+    <div class="form-group" style="margin-top:10px;">
+        <label class="col-md-3 control-label"></label>
+        <div class="col-md-4">
+            <div id="queue"></div>
+            <input id="image_upload" name="image_upload" type="file">
+        </div>
+    </div>
+    <div class="form-group" style="margin-top:-15px;">
+        <label class="col-md-3 control-label">@Html.DisplayNameFor(m => m.AddImageNameList)</label>
+        <div class="col-md-6">
+            @Html.TextBoxFor(m => m.AddImageNameList, new { @readOnly = "true", @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-3 control-label"></label>
+        <div class="col-md-6"><button type="submit" class="btn btn-default btn-primary"><span class="glyphicon glyphicon-saved"></span> 提交</button></div>
+    </div>
+}
+
+@section scripts{
+    <script src="/Scripts/uploadify/jquery.uploadify.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('#image_upload').uploadify({
+                'swf': '/Scripts/uploadify/uploadify.swf',
+                'uploader': '/System/Upload',
+                //按钮显示的文字
+                'buttonText': '上传文件',
+                'progressData': 'percentage',
+                'fileTypeDesc': 'All Files',
+                //允许上传的文件后缀
+                'fileTypeExts': '*.*',
+                'removeCompleted': false,
+                'multi': true,
+                'onUploadStart' : function(file) {
+                    if ($('#AddImageNameList').val().split(",").indexOf(file.name) >= 0) {
+                        $('#image_upload').uploadify('cancel')
+                    }
+                },
+                'onUploadSuccess': function (file, data, response) {
+                    if ($('#AddImageNameList').val().split(",").indexOf(file.name) < 0) {
+                        $('#AddImageNameList').val($('#AddImageNameList').val() + file.name + ",");
+                        $('#AddImageList').val($('#AddImageList').val() + ",,," + eval("(" + data + ")"));
+                        $("#image_upload-queue>div a").each(function () {
+                            if (!$(this).attr("name")) {
+                                $(this).prop("path", eval("(" + data + ")")).prop("name", file.name);
+                                return false;
+                            }
+                        });
+                    }
+                    
+                    //$("#image_upload-queue").hide();
+                    console.log($('#AddImageNameList').val())
+                    console.log($('#AddImageList').val())
+                }
+            });
+            $("#image_upload-queue").on("click", "div .cancel a", function () {
+                var _this = $(this);
+                $('#AddImageList').val($('#AddImageList').val().replace(_this.prop("path"), ""));
+                $('#AddImageNameList').val($('#AddImageNameList').val().replace(_this.prop("name"), ""));
+                //console.log(_this.prop("path"))
+                console.log($('#AddImageNameList').val())
+                console.log($('#AddImageList').val())
+            });
+            $('#image_upload-button').removeClass();
+            $('#image_upload-button').addClass("btn btn-primary");
+            $("#image_upload-button").css("line-height", "15px");
+        })
+    </script>
+}
+
+

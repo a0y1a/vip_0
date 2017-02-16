@@ -1,0 +1,382 @@
+﻿
+/* 仅用于windows phone 8 */
+@-webkit-viewport   { width: device-width; }
+@-moz-viewport      { width: device-width; }
+@-ms-viewport       { width: device-width; }
+@-o-viewport        { width: device-width; }
+@viewport           { width: device-width; }
+
+* {
+    box-sizing: border-box;
+}
+
+*:before, *:after {
+    box-sizing: inherit;
+}
+
+body {
+    overflow-y:hidden;
+    font-family:'Microsoft YaHei','Microsoft YaHei UI',Arial;
+}
+/***/
+.table > thead > tr > th,
+.table > tbody > tr > th,
+.table > tfoot > tr > th,
+.table > thead > tr > td,
+.table > tbody > tr > td,
+.table > tfoot > tr > td {
+  vertical-align:middle;
+}
+
+.row {
+    position:relative;
+}
+
+/* Styles for validation helpers
+-----------------------------------------------------------*/
+.field-validation-valid {display: none;}
+.field-validation-error {color: #b94a48; line-height:30px;}
+.input-validation-error {border: 1px solid #b94a48;background-color: #ffeeee;}
+.validation-summary-valid {display: none;}
+.validation-summary-errors {color: #b94a48;}
+.validation-summary-errors ul{padding-left:15px;}
+
+a {
+  text-decoration: none;
+  -webkit-transition: all 0.25s linear;
+  -moz-transition: all 0.25s linear;
+  -ms-transition: all 0.25s linear;
+  -o-transition: all 0.25s linear;
+  transition: all 0.25s linear; 
+}
+  a:hover, a:focus {
+    color: #5038ec; 
+  }
+
+::-moz-selection {
+  background: #e4e64c;
+  color: #000;
+  text-shadow: none; 
+}
+
+::selection {
+  background: #e4e64c;
+  color: #000;
+  text-shadow: none; 
+}
+
+/*主导航*/
+.pz-navbar {
+    height:50px;
+    position:relative;
+}
+.pz-navbar a{
+    text-decoration:none;
+    color:#000;
+}
+.pz-navbar .navbar-header {
+    margin-right:20px;
+}
+.pz-navbar .navbar-header,
+.pz-navbar .navbar-left{
+    float:left;
+    height:100%;
+}
+.pz-navbar .navbar-right{
+    float:right;
+    height:100%;
+}
+.pz-navbar .navbar-app-toggle{
+    border:none;
+    background-color:#5038ec;
+    color:#fff;
+    height:100%;
+    width:50px;
+    font-size:1.2em;
+}
+.pz-navbar .navbar-menu-toggle{
+    padding-left:15px;
+    font-size:18px;
+    background-color:transparent;
+}
+.pz-navbar .navbar-toggle {
+    margin-top:0px;
+    margin-bottom:0px;
+    margin-right:0px;
+    padding:14px 15px;
+}
+.pz-navbar .navbar-toggle:hover {
+    border-radius:unset;
+    background-color:#e8e8e8;
+}
+.pz-navbar ul.navbar-nav{
+    list-style:none;
+    padding:0px;
+    margin:0px;
+    height:100%;
+}
+.pz-navbar ul.navbar-nav > li > a {
+    display:block;
+    padding:15px 10px;
+    line-height: 20px;
+    color:#808080;
+}
+.pz-navbar ul.navbar-nav li a:hover,
+.pz-navbar ul.navbar-nav li.active a{
+    color:#5038ec;
+}
+
+@media (max-width: 767px) {
+ .pz-navbar ul.navbar-nav li {
+     float:left;
+  }
+.pz-navbar ul.navbar-collapse {
+    position:absolute;
+    top:50px;
+    right:0px;
+    border:1px solid #e8e8e8;
+    background-color:#fff;
+    float:unset;
+    overflow-y:hidden;
+    height:unset;
+    z-index:1000;
+    box-shadow:0 6px 12px rgba(0,0,0,.175);
+    min-width:160px;
+}
+.pz-navbar ul.navbar-collapse > li {
+    float:unset;       
+}
+.pz-navbar ul.navbar-collapse > li > a {
+    padding:8px 15px;
+    line-height: 20px;
+    color:#808080;
+}
+}
+
+/*工具栏中的按扭*/
+.btn-tool {
+  color: #fff;
+  background-color: transparent;
+  border-color: transparent;
+}
+.btn-tool:focus,
+.btn-tool.focus {
+  color: #fff;
+  background-color: #444;
+  border-color: transparent;
+}
+.btn-tool:hover {
+  color: #fff;
+  background-color: #444;
+  border-color: transparent;
+}
+.btn-tool:active,
+.btn-tool.active,
+.open > .dropdown-toggle.btn-tool {
+  color: #fff;
+  background-color: #444;
+  border-color: transparent;
+}
+.btn-tool:active:hover,
+.btn-tool.active:hover,
+.open > .dropdown-toggle.btn-tool:hover,
+.btn-tool:active:focus,
+.btn-tool.active:focus,
+.open > .dropdown-toggle.btn-tool:focus,
+.btn-tool:active.focus,
+.btn-tool.active.focus,
+.open > .dropdown-toggle.btn-tool.focus {
+  color: #fff;
+  background-color: #333;
+  border-color: transparent;
+}
+
+/*工具栏相关*/
+.pz-toolbar {
+    height:40px;
+    background-color:#000;
+}
+.pz-toolbar a{
+    text-decoration:none;
+}
+.pz-toolbar .toolbar-header {
+    color:#fff;
+}
+.pz-toolbar .toolbar-header,
+.pz-toolbar .toolbar-left{
+    float:left;
+    height:100%;
+}
+.pz-toolbar .toolbar-right{
+    float:right;
+    height:100%;
+}
+.pz-toolbar a.toolbar-back{
+    color:#fff;
+    display:inline-block;
+    padding:10px 15px;
+    border-right:1px solid #333;
+}
+.pz-toolbar .toolbar-header-title {
+    padding:0px;margin:0px;
+    font-size:1.0em;
+    line-height:280%;
+    display:inline-block;
+    padding-left:15px;
+}    
+.pz-toolbar ul.toolbar-tools{
+    list-style:none;
+    padding:0px;
+    margin:0px;
+    height:100%;
+}
+.pz-toolbar ul.toolbar-tools > li{
+    float:left;
+    height:100%;
+}
+.pz-toolbar ul.toolbar-tools > li:hover{
+    background-color:#555;
+}
+.pz-toolbar ul.toolbar-tools > li > a {
+    display:block;
+    padding:10px 10px;
+    line-height: 20px;
+    color:#fff;
+}
+.pz-toolbar ul.toolbar-tools > li:hover > a {
+   background-color:#444;
+}
+.pz-toolbar ul.toolbar-tools > li > a:focus,
+.pz-toolbar ul.toolbar-tools > li.active > a {
+   background-color:#333;
+}
+.pz-toolbar .btn-tool,
+.pz-toolbar .btn-group {
+    height:100%;
+    border-radius:unset;
+}
+.pz-toolbar ul.toolbar-tools > li > .btn-group .btn-tool {
+    padding-left:10px;
+}
+.pz-toolbar ul.toolbar-tools > li > .btn-group .btn-tool:first-child {
+    padding-right:10px;
+}
+.pz-toolbar ul.toolbar-tools > li > .btn-group > .divider{
+    width:1px;
+    height:15px;
+    display:block;
+    float:left;
+    background-color:#777;
+    margin-top:12px;
+}
+.pz-toolbar ul.toolbar-tools > li:hover > .btn-group > .divider{
+    background-color:transparent;
+}
+.pz-toolbar ul.toolbar-tools .dropdown-menu {
+    margin-top:0px;
+    border-radius:unset;
+    right:0px;
+    left:auto;
+}
+
+/*页面主体区*/
+.col-nav{
+    border-right:1px solid #e8e8e8;
+    height:100%;
+    padding-left:0px;
+    padding-right:0px;
+    z-index:100;
+}
+.col-main{
+    padding-right:0px;
+}
+
+@media (min-width: 768px) {
+  .col-nav-collapse.collapse {
+    display: block !important;
+    padding-bottom: 0;
+    overflow: visible !important;
+  }
+  .navbar-collapse.in {
+    overflow-y: visible;
+  }
+}
+@media (max-width: 767px) {
+    .col-nav{
+        height:auto;
+        position:absolute;
+        top:0px;
+        left:0px;
+        background-color:#fff;
+        float:unset;
+        box-shadow:0 6px 12px rgba(0,0,0,.175);
+        min-width:200px;
+    }
+}
+#main-top {
+    margin-left:-15px;
+}
+#main-bottom {
+    border-top:1px solid #e8e8e8;
+    margin-left:-15px;
+}
+#main-bottom:not(.loaded) {
+    visibility: hidden;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+#main-section {
+    overflow:auto;
+}
+.tabs-below {
+    position:relative;
+    z-index:1;
+}
+.tabs-below > ul{
+    border-bottom:unset;
+}
+.tabs-below > ul li{
+    margin-bottom:unset;
+}
+.tabs-below > ul > li > a,
+.tabs-below > ul > li > a:hover,
+.tabs-below > ul > li > a:focus{
+    padding:10px 10px;
+    background-color:transparent;
+    border-radius:0px;
+    border:none;
+}
+.tabs-below > ul > li.active > .btn-link, 
+.tabs-below > ul > li.active > .btn-link:hover, 
+.tabs-below > ul > li.active > a, 
+.tabs-below > ul > li.active > a:hover, 
+.tabs-below > ul > li.active > a:focus {
+    color: #555;
+    cursor: default;
+    background-color: #fff;
+    border:none;
+    text-decoration:none;
+}
+.panel-nav {
+    border:unset;
+    border-radius:unset;
+}
+.panel-nav > .panel-heading {
+  color: #fff;
+  background-color: #000;
+  border:none;
+  border-radius:unset;
+}
+.panel-nav > .panel-heading + .panel-collapse > .panel-body {
+  border-top-color: #ddd;
+}
+.panel-nav > .panel-heading .badge {
+  color: #f5f5f5;
+  background-color: #333;
+}
+.panel-nav > .panel-footer + .panel-collapse > .panel-body {
+  border-bottom-color: #ddd;
+}
+

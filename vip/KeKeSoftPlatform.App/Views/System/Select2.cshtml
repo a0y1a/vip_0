@@ -1,0 +1,75 @@
+﻿@model Select2Data
+@{
+    ViewBag.Title = "下拉查询";
+    List<T_Class> classList = new List<T_Class>();
+    List<T_Role> roleList = new List<T_Role>();
+    using(KeKeSoftPlatformDbContext db = new KeKeSoftPlatformDbContext())
+    {
+        classList.AddRange(db.Class.ToList());
+        roleList.AddRange(db.Role.ToList());
+    }
+}
+
+@section head{
+    <link href="/Scripts/select2-master/dist/css/select2.min.css" rel="stylesheet" />
+    <style type="text/css">
+        .select2-selection--single{
+            height:32px !important;
+        }
+    </style>
+}
+
+@using (Html.Form())
+{
+    @Html.HiddenFor(m => m.StudentId)
+    @Html.HiddenFor(m => m.RoleIdList)
+    
+    <div class="form-group">
+        <label class="col-md-2 control-label input-required-content">@Html.DisplayNameFor(m => m.ClassId)</label>
+        <div class="col-md-6">
+            <select class="form-control" id="ClassId" name="ClassId">
+                @foreach (var @class in classList.OrderBy(m => m.Code))
+                {
+                    <option value="@(@class.Id)" @(Model.ClassId.ToString().Contains(@class.Id.ToString()) ? "selected" : "")>@(@class.Name)</option>
+                }
+            </select>
+            @Html.ValidationMessageFor(m => m.ClassId)
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label class="col-md-2 control-label input-required-content">@Html.DisplayNameFor(m => m.RoleIdList)</label>
+        <div class="col-md-6">
+            <select class="form-control" multiple="multiple" id="RoleId" name="RoleId">
+                @foreach (var role in roleList.OrderBy(m => m.RoleName))
+                {
+                    <option value="@role.Id" @(Model.RoleIdList.Contains(role.Id.ToString()) ? "selected" : "")>@role.RoleName</option>
+                }
+            </select>
+            @Html.ValidationMessageFor(m => m.RoleIdList)
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-2 control-label"></label>
+        <div class="col-md-6">@Html.Submit()</div>
+    </div>
+}
+
+@section scripts{
+    <script src="/Scripts/select2-master/dist/js/select2.full.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("#ClassId").select2();
+
+            $("#RoleId").select2();
+            $("#RoleId").on('select2:select', function (evt) {
+                $("#RoleIdList").val($("#RoleIdList").val() + evt.params.data.id + ",");
+            });
+            $("#RoleId").on('select2:unselect', function (evt) {
+                $("#RoleIdList").val($("#RoleIdList").val().replace(evt.params.data.id, ""));
+            });
+        })
+    </script>
+}
+

@@ -1,0 +1,154 @@
+﻿@model OperatePageData
+@{
+    ViewBag.Title = "页面操作";
+}
+@section head{
+    <style type="text/css">
+        select {
+            text-align: center !important;
+        }
+
+        th, td {
+            text-align: center;
+        }
+
+        a:active, a:hover, a:visited, a:link {
+            text-decoration: none;
+            cursor: default;
+        }
+
+        table {
+            margin-top: 12px;
+            width: 95% !important;
+        }
+
+        input {
+            text-align: center;
+        }
+    </style>
+}
+
+@using (Html.Form())
+{
+    @Html.HiddenFor(m => m.DropdownListTest)
+    @Html.HiddenFor(m => m.SelectOptionTest)
+    @Html.HiddenFor(m => m.InputGroupTest)
+
+    <div class="form-group">
+        <label class="control-label col-md-2">下拉选项</label>
+        <div class="col-sm-9">
+            <div class="col-md-3" style="padding-left:0;">
+                <select name="sex" class="form-control">
+                    <option value="">--choose sex--</option>
+                    <option value="1">female</option>
+                    <option value="2">male</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select name="nation" class="form-control">
+                    <option value="">--choose nation--</option>
+                    <option value="1">han</option>
+                    <option value="2">hui</option>
+                    <option value="3">miao</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select name="bloodType" class="form-control">
+                    <option value="">--choose bloodType--</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="O">O</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-2">输入框组</label>
+        <div class="col-md-9">
+            <label class="checkbox-inline col-md-2">
+                <input type="checkbox" id="C#" value="C#"> C#
+            </label>
+            <label class="checkbox-inline col-md-2">
+                <input type="checkbox" id="Java" value="Java"> Java
+            </label>
+            <label class="checkbox-inline col-md-2">
+                <input type="checkbox" id="Javascript" value="Javascript"> Javascript
+            </label>
+            <label class="checkbox-inline col-md-2">
+                <input type="checkbox" id="C++" value="C++"> C++
+            </label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-2">表格取值</label>
+        <div class="col-md-7">
+            <table class="table table-bordered">
+                <thead><tr><th>Name</th><th>Age</th><th>Action</th></tr></thead>
+                <tbody><tr><td><input type="text" class="form-control" /></td><td><input type="number" class="form-control" /></td><td><a href="javascript:void(0)" class="add">Add</a></td></tr></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-2 control-label"></label>
+        <div class="col-md-3">
+            <input type="button" id="btnSubmit" class="btn btn-sm btn-success" value="submit" />
+        </div>
+    </div>
+}
+@section scripts{
+    <script>
+        $(function () {
+            $("table").on("click", ".add", function () {
+                var _tr = $(this).closest("tr");
+                var _name = _tr.find("input").eq(0);
+                var _age = _tr.find("input").eq(1);
+                _tr.before("<tr class='new'><td>" + _name.val() + "</td><td>" + _age.val() + "</td><td><a href='javascript:void(0)' class='delete'>delete</a></td></tr>");
+                _name.val("");
+                _age.val("");
+            }).on("click", ".delete", function () {
+                $(this).closest("tr").remove();
+            })
+
+            $("#btnSubmit").click(function () {
+                //下拉框
+                var dropdownArray = [];
+                $("select").each(function () {
+                    var selected = $(this).find("option:selected");
+                    if (selected.val().length > 0) {
+                        dropdownArray.push({
+                            Key: $(this).attr("name"),
+                            Value: selected.text()
+                        })
+                    }
+                })
+                if (dropdownArray.length > 0) {
+                    $("#DropdownListTest").val(JSON.stringify(dropdownArray));
+                }
+
+                //checkbox选项组
+                $("input:checkbox").each(function () {
+                    if ($(this).is(":checked")) {
+                        $("#SelectOptionTest").val($("#SelectOptionTest").val() + "," + $(this).val());
+                    }
+                })
+
+                //table>tr 获取值
+                var inputGroupArray = [];
+                $("tbody>tr.new").each(function () {
+                    inputGroupArray.push({
+                        Key: $(this).children().eq(0).text(),
+                        Value: $(this).children().eq(1).text()
+                    })
+                })
+                if (inputGroupArray.length > 0) {
+                    $("#InputGroupTest").val(JSON.stringify(inputGroupArray));
+                }
+
+                $("form").submit();
+            })
+        })
+    </script>
+}

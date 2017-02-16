@@ -1,0 +1,92 @@
+﻿@model Pager<StudentListData>
+@{
+    ViewBag.Title = "学生列表";
+    List<SelectListItem> sexList = new List<SelectListItem>() { new SelectListItem { Text = "==全部==", Value = "", Selected = string.IsNullOrWhiteSpace(Request.QueryString["sexType"]) } };
+    List<SelectListItem> classList = new List<SelectListItem>() { new SelectListItem { Text = "==全部==", Value = "", Selected = string.IsNullOrWhiteSpace(Request.QueryString["classId"]) } };
+    sexList.AddRange(Sex.Female.ToSelectDataSource().Select(m => new SelectListItem { Text = m.Text, Value = m.Value, Selected = !string.IsNullOrWhiteSpace(Request.QueryString["sexType"]) && Request.QueryString["sexType"].ToString() == m.Value }));
+    using(KeKeSoftPlatformDbContext db = new KeKeSoftPlatformDbContext())
+    {
+        classList.AddRange(db.Class.OrderBy(m => m.CreateDate).ToList().Select(m => new SelectListItem { Text = m.Name, Value = m.Id.ToString(), Selected = !string.IsNullOrWhiteSpace(Request.QueryString["classId"]) && Request.QueryString["classId"].ToString() == m.Id.ToString()  }));
+    }
+    Func<StudentListData, MvcHtmlString> moreAction = m =>
+    {
+        MvcHtmlString items = MvcHtmlString.Empty;
+        items = items.Append(Html.ActionLink("编辑", "EditStudent", new { studentId = m.StudentId }));
+        items = items.Append(Html.ActionLink("删除", "DeleteStudent", new { studentId = m.StudentId }, new { onclick = "return confirm('确认删除此学生？')" }));
+        items = items.Append(Html.ActionLink("重置密码", "ResetStudentPwd", new { studentId = m.StudentId }));
+        return items;
+    };
+}
+
+@using (Html.Search())
+{
+    Html.Group("姓名 ", Html.TextBox("name", Request.QueryString["name"], new { @class = "form-control", style = "width:160px;" }));
+    Html.Group("性别 ", Html.DropDownList("sex", sexList, new { @class = "form-control", style = "width:160px;" }));
+    Html.Group("班级 ", Html.DropDownList("classId", classList, new { @class = "form-control", style = "width:160px;" }));
+    using(Html.Group("生日 "))
+    {
+        @Html.TextBox("minDate", Request.QueryString["minDate"], new { @class = "form-control", @style = "width:160px;" });
+        <span>——</span>
+        @Html.TextBox("maxDate", Request.QueryString["maxDate"], new { @class = "form-control", @style = "width:160px;" })
+    }
+}
+
+<div style="margin-top:20px; margin-bottom:12px;">  
+    <a href="/System/CreateStudent" class="btn btn-primary btn-sm" style="margin-right:5px;"><span class="glyphicon glyphicon-plus" style="margin-right:5px;"></span>添加学生</a>
+    <a href="javascript:void(0)" class="btn btn-danger btn-sm" style="margin-right:5px;" id="batchDelete"><span class="glyphicon glyphicon-remove" style="margin-right:5px;"></span>批量删除</a>
+    <a href="javascript:void(0)" class="btn btn-success btn-sm" style="margin-right:5px;" id="batchCheck"><span class="glyphicon glyphicon-check" style="margin-right:5px;"></span>批量审核</a>
+    @*<a href="javascript:void(0)" class="btn btn-primary btn-sm" style="margin-right:5px;"><span class="glyphicon glyphicon-download-alt" style="margin-right:5px;"></span>下载模板</a>
+    <a href="/system/ImportStudentData" class="btn btn-info btn-sm" style="margin-right:5px;"><span class="glyphicon glyphicon-import" style="margin-right:5px;"></span>导入数据</a>
+    <a href="/System/DownLoadStudentData" class="btn btn-warning btn-sm" style="margin-right:5px;"><span class="glyphicon glyphicon-export" style="margin-right:5px;"></span>导出数据</a>*@ 
+</div>
+    
+@(Grid.Create<StudentListData>().SetDataSource(Model.Data).EnableFilter(false).Key(m => m.StudentId)
+.Column("<input type='checkbox' id='tableCheck'/>", m => "<input type='checkbox' id='" + m.StudentId + "'/>").End()
+.Column(m => m.ClassName).Name("所属班级").End()
+.Column(m => m.Code).Name("学号").Attributes(new { @style = "width:150px;" }).End()
+.Column(m => m.Name).Name("姓名").End()
+.Column(m => m.Sex).Name("性别").Value(typeof(Sex)).End()
+.Column(m => m.Age).Name("年龄").End()
+.Column(m => m.Birthday).Name("出生日期").Value(m => m.Birthday.ToString("yyyy-MM-dd")).End()
+.Column(m => m.Mobile).Name("手机号").End()
+.Column(m => m.IsZhuXiao).Name("是否住校").Value(m => m.IsZhuXiao ? "是" : "否").End()
+.Column(m => m.Status).Name("状态").Value(typeof(StudentStatus)).End()
+.ActionColumn(
+m => Html.ActionLink("详情", "StudentDetail", new { studentId = m.StudentId }, new { style = "margin-right:10px;" }),
+m => Html.DropDownButtonGroup("更多", moreAction(m))).End()
+.Render())
+
+@Html.Page(Model)
+
+@section scripts{
+<script src="/Scripts/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript">
+    $("#minDate, #maxDate").click(function () {
+        WdatePicker({ dateFmt:"yyyy-MM-dd" });
+    })
+
+    $("#tableCheck").click(function () {
+        if ($(this).is(":checked")) {
+            $("tr>td").find("input[type='checkbox']").prop("checked", true);
+        } else {
+            $("tr>td").find("input[type='checkbox']").prop("checked", false);
+        }
+    })
+
+    $("#batchDelete").click(function () {
+        var studentList = $("tbody>tr>td").find("input[type='checkbox']").filter(":checked").map(function () { return $(this).attr("id") }).get().join(",");
+        if (studentList.length == 0) {
+            common.alert("请选择要删除的学生！")
+            return false;
+        }
+
+        
+            $.post("/System/DeleteStudent", { studentIdList: studentList }, function (result) {
+                $("tbody>tr").has("input[type='checkbox']:checked").remove();
+                common.alert(result.Error);
+            })
+    })
+</script>
+}
+
+

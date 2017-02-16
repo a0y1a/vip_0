@@ -1,0 +1,38 @@
+﻿
+body {
+    font-family: "Helvetica Neue", Helvetica, Microsoft Yahei, Hiragino Sans GB, WenQuanYi Micro Hei, sans-serif;
+}
+
+nav a {
+    font-size: 16px;
+}
+
+.btn-position {
+    margin: 10px 5px 0 0;
+}
+
+.gly-position {
+    margin-right: 5px;
+}
+
+.input-required-content::before{
+    content: "* ";
+    color:red;
+}
+
+.img-container {
+    position: relative;
+    display: inline-block;
+}
+
+.divX {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    z-index: 100;
+    color: red;
+    font-weight: bold;
+    font-size: 18px;
+    cursor: pointer;
+    display: none;
+}

@@ -1,0 +1,47 @@
+﻿@model SelectColorData
+@{
+    ViewBag.Title = "颜色控件";
+}
+
+@section head{
+    <link href="/Scripts/MiniColor/jquery.minicolors.css" rel="stylesheet" />
+    <style type="text/css">
+        .selectColor {
+            height: 32px !important;
+        }
+    </style>
+}
+
+@using (Html.Form())
+{
+    <div class="form-group">
+        <label class="col-md-2 control-label input-required-content" for="Color1">@Html.DisplayNameFor(m => m.Color1)</label>
+        <div class="col-md-5">@Html.TextBoxFor(m => m.Color1, new { @class = "form-control selectColor" }).Append(Html.ValidationMessageFor(m => m.Color1))</div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label input-required-content" for="Name">@Html.DisplayNameFor(m => m.Color2)</label>
+        <div class="col-md-5">@Html.TextBoxFor(m => m.Color2, new { @class = "form-control selectColor" }).Append(Html.ValidationMessageFor(m => m.Color2))</div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label"></label>
+        <div class="col-md-5">@Html.Submit()</div>
+    </div>
+}
+
+@section scripts{
+    <script src="/Scripts/MiniColor/jquery.minicolors.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("#Color1, #Color2").minicolors({
+                control: 'hue',
+                defaultValue: $(this).val(),
+                inline: false,
+                letterCase: 'lowercase',
+                opacity: false,
+                position: 'bottom left',
+                change: null,
+                theme: 'default'
+            });
+        });
+    </script>
+}

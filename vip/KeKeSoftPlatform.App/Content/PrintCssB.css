@@ -1,0 +1,92 @@
+﻿ .offertablecontent {
+        width: 1000px;
+        table-layout: fixed;
+        margin-top: 50px;
+    }
+
+    table.offertablecontent tr {
+        height: 40px;
+    }
+
+    table.offertablecontent td {
+        padding: 0 2px;
+        overflow: inherit;
+        text-align: center;
+    }
+
+    table.offertablecontent .lefttitle {
+        background-color: white;
+        color: black;
+        font-size: 24pt;
+        font-weight: bold;
+        font-style: normal;
+        font-family: 宋体;
+        text-align: center;
+        vertical-align: bottom;
+        white-space: nowrap;
+    }
+
+    table.offertablecontent .righttitle {
+        background-color: white;
+        color: black;
+        font-size: 24pt;
+        font-weight: bold;
+        font-style: normal;
+        font-family: 黑体;
+        text-align: center;
+        vertical-align: bottom;
+        white-space: nowrap;
+    }
+
+    table.offertablecontent .leftsequence, table.offertablecontent .rightsequence {
+        background-color: white;
+        color: black;
+        font-size: 14pt;
+        font-weight: normal;
+        font-style: normal;
+        font-family: 宋体;
+        text-align: center;
+        vertical-align: middle;
+        white-space: nowrap;
+        text-align: right;
+    }
+
+    table.offertablecontent .centertext {
+        background-color: white;
+        color: black;
+        font-size: 14pt;
+        font-weight: bold;
+        font-style: normal;
+        font-family: 宋体;
+        text-align: center;
+        vertical-align: middle;
+        white-space: nowrap;
+    }
+
+    table.offertablecontent .leftunderlinetext, table.offertablecontent .rightunderlinetext {
+        background-color: white;
+        color: black;
+        font-size: 14pt;
+        font-weight: normal;
+        font-style: normal;
+        font-family: 宋体;
+        text-align: center;
+        vertical-align: bottom;
+        white-space: nowrap;
+        border-bottom: 1px solid black;
+    }
+
+    table.offertablecontent .leftnomaltext, table.offertablecontent .rightnomaltext {
+        background-color: white;
+        color: black;
+        font-size: 14pt;
+        font-weight: normal;
+        font-style: normal;
+        font-family: 宋体;
+        text-align: left;
+        vertical-align: bottom;
+        white-space: nowrap;
+    }
+    .btn-primary { color: #fff; background-color: #337ab7; border-color: #2e6da4; }
+        .btn-primary:hover { color: #fff; background-color: #286090; border-color: #204d74; }
+        .btn { display: inline-block; padding: 6px 12px; margin-bottom: 0; font-size: 14px; font-weight: normal; line-height: 1.42857143; text-align: center; white-space: nowrap; vertical-align: middle; -ms-touch-action: manipulation; touch-action: manipulation; cursor: pointer; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; background-image: none; border: 1px solid transparent; border-radius: 4px; }

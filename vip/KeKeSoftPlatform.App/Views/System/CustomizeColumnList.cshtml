@@ -1,0 +1,35 @@
+﻿@model Pager<StudentListData>
+
+<div class="panel panel-warning">
+    <div class="panel-heading">禁用自定义列 <span class="pull-right">对 table 调用方法 EnableFilter(false) </span></div>
+    @(Grid.Create<StudentListData>().SetDataSource(Model.Data).EnableFilter(false).Key(m => m.StudentId)
+    .Column("<input type='checkbox' id='tableCheck'/>", m => "<input type='checkbox' id='" + m.StudentId + "'/>").End()
+    .Column(m => m.Code).Name("学号").End()
+    .Column(m => m.Name).Name("姓名").End()
+    .Column(m => m.Sex).Name("性别").Value(typeof(Sex)).End()
+    .Column(m => m.Age).Name("年龄").End()
+    .Column(m => m.Birthday).Name("出生日期").Value(m => m.Birthday.ToString("yyyy-MM-dd")).End()
+    .Column(m => m.Mobile).Name("手机号").End()
+    .Column(m => m.ClassName).Name("所属班级").End()
+    .Column(m => m.IsZhuXiao).Name("是否住校").Value(m => m.IsZhuXiao ? "是" : "否").End().Render())
+</div>
+
+@Html.Page(Model)
+
+<div class="panel panel-danger" style="margin-top:20px;">
+    <div class="panel-heading">启用自定义列 <span class="pull-right">对 table 调用方法 EnableFilter(true)，对 column 调用方法  [设置列初始可见]SetVisible(true) 或者 [设置列初始不可见]SetVisible(false)</span></div>
+    @(Grid.Create<StudentListData>().SetDataSource(Model.Data).Key(m => m.StudentId)
+    .Column("<input type='checkbox' id='tableCheck'/>", m => "<input type='checkbox' id='" + m.StudentId + "'/>").End()
+    .Column(m => m.Code).Name("学号").SetVisible(true).End()
+    .Column(m => m.Name).Name("姓名").End()
+    .Column(m => m.Sex).Name("性别").Value(typeof(Sex)).SetVisible(false).End()
+    .Column(m => m.Age).Name("年龄").End()
+    .Column(m => m.Birthday).Name("出生日期").Value(m => m.Birthday.ToString("yyyy-MM-dd")).End()
+    .Column(m => m.Mobile).Name("手机号").End()
+    .Column(m => m.ClassName).Name("所属班级").End()
+    .Column(m => m.IsZhuXiao).Name("是否住校").Value(m => m.IsZhuXiao ? "是" : "否").End().Render())
+</div>
+
+@Html.Page(Model)
+
+

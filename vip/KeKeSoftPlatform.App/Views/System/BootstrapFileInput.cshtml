@@ -1,0 +1,154 @@
+﻿@model List<UploadFileData>
+@{
+    ViewBag.Title = "Index";
+}
+
+@section head{
+    <link href="/Scripts/FileInput/css/fileinput.css" rel="stylesheet" />
+    <style type="text/css">
+        .file-drop-zone {
+            margin: 0;
+            padding: 0;
+        }
+
+        .file-preview {
+            border: none;
+            padding: 0;
+        }
+
+        /*.file-preview-other-frame {     设置预览类型为 other 的 iframe 的宽度和高度
+            width:80px;
+            height:65px;
+            padding:0 !important;
+            margin:0 !important;
+        }*/
+    </style>
+}
+
+<div class="row">
+    <div class="col-md-9">
+        @* 设置预览区域宽度 *@
+        @*限制上传类型
+            <input id="test" type="file" multiple class="file" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">*@
+        <input id="test" type="file" multiple class="file">
+    </div>
+</div>
+
+<div><button type="button" class="btn btn-success btn-sm" id="submitForm"><span class="glyphicon glyphicon-floppy-disk"></span> submit</button></div>
+
+@section scripts{
+    <script src="/Scripts/FileInput/js/sortable.js"></script>
+    <script src="/Scripts/FileInput/js/fileinput.min.js"></script>
+    <script src="/Scripts/FileInput/js/zh.js"></script>
+    <script type="text/javascript">
+        (function () {
+            $("#test").fileinput({
+                language: 'zh',
+                showCaption: false,//是否显示文件标题
+                showBrowse: false,//是否显示选择按钮
+                showPreview: true,//是否显示文件预览
+                showRemove: false,//是否显示文件删除/清除按钮
+                showUpload: false,//是否显示文件上传按钮
+                showCancel: true,//是否显示文件上传取消按钮.只有在AJAX上传正在进行时才会启用和显示。
+                showClose: false,//是否在预览中显示关闭图标.只有在showPreview为true或在预览模板中使用{close}标签时才会解析
+                showUploadedThumbs: true,
+                uploadAsync: false,
+                purifyHtml: false,
+                //allowedFileTypes: ['image'],                  允许上传的文件类型
+                //allowedFileExtensions : ['jpg','png'],       设置允许上传的文件后缀名
+                //msgUploadEmpty: "上传失败，请上传 ***** 格式的文件",    设置上传错误提示
+                browseOnZoneClick: true,
+                initialPreviewAsData: true,
+                allowedPreviewTypes: ['image', 'video'],
+                previewSettings: {
+                    image: { width: "100px", height: "115px" },
+                    video: { width: "100px", height: "110px" },
+                    other: { width: "100px", height: "115px" }
+                },
+                minFileCount: 1,
+                maxFileCount: 10,
+                uploadUrl: '/system/FileUpload',
+                dropZoneTitle: "选择或拖入文件",
+                dropZoneClickTitle: "",
+                fileActionSettings: {
+                    showUpload: true,
+                    showRemove: true,
+                    showZoom: true,
+                    showDrag: true
+                },
+                initialPreview: [
+                    @foreach(var item in Model)
+                    {
+                        <text>"@item.Key",</text>
+                    }
+                ],
+                initialPreviewConfig: [                    //初始化从数据库中获取的文件数据
+                    @foreach(var item in Model)
+                    {
+                        <text>
+                            {
+                                type: "@item.Type",
+                                caption: "@item.Caption",
+                                size: 99999999,
+                                width: "@item.Width",
+                                frameAttr: {
+                                    style: 'height:@item.Height'
+                                },
+                                url: "/system/DeleteFileUpload",
+                                key: "@item.Key",
+                                extra : {                      //删除时附加参数，方法中根据 testId 是否为空判断是否删除文件
+                                    testId: '@ViewBag.TestId'
+                                }
+                            },
+                        </text>
+                    }
+                ],
+                uploadExtraData: {     //上传时附加参数
+                    testId: (function () {
+                        return '@ViewBag.TestId';
+                    })()
+                }
+            }).on("filebatchselected", function (event, files) {
+                $("#test").fileinput("upload");
+            });
+        })();
+
+        $(function () {
+            $("#submitForm").click(function(){
+
+                //限制上传数量
+                //if($(".kv-preview-thumb").find(".file-footer-buttons>.kv-file-remove[title='删除文件']").length <= 0){
+                //    alert("请上传图片！");
+                //    return false;
+                //}
+                //if($(".kv-preview-thumb").find(".file-footer-buttons>.kv-file-remove[title='删除文件']").length != 2){
+                //    alert("请上传两张图片！");
+                //    return false;
+                //}
+
+                var temp_form = document.createElement("form"); //创建form表单
+                temp_form.action = "/system/BootstrapFileInput";
+                //temp_form.target = "_blank";  //如需打开新窗口，form的target属性要设置为'_blank'
+                temp_form.method = "post";
+                temp_form.style.display = "none";
+
+                var opt1 = document.createElement("textarea");  //添加参数
+                opt1.name = "testId";
+                opt1.value = '@ViewBag.TestId';
+                temp_form.appendChild(opt1);
+
+                var opt2 = document.createElement("textarea");  //添加参数
+                opt2.name = "imgUrlList";
+                $(".kv-preview-thumb").find(".file-footer-buttons>.kv-file-remove[title='删除文件']").each(function (){
+                    if(opt2.value.indexOf($(this).attr("data-key")) === -1){
+                        opt2.value += $(this).attr("data-key") + "///";
+                    }
+                })
+                temp_form.appendChild(opt2);
+
+                document.body.appendChild(temp_form);
+                temp_form.submit(); //提交数据
+            })
+        });
+    </script>
+}

@@ -1,0 +1,52 @@
+﻿@model PCCDisplayData
+@{
+    ViewBag.Title = "省市地区";
+}
+
+@using (Html.Form())
+{
+    <div class="form-group">
+        @Html.Row("区域", k => Html.DropDownListFor(m => m.ProvinceId, PCCProvider.GetAllProvince().Select(m => new SelectListItem { Text = m.Name, Value = m.Id.ToString(), Selected = (m.Id == Model.ProvinceId) }), new { @class = "form-control", @style = "width:175px; display:inline-block;" })
+                        .Append(Html.DropDownListFor(m => m.CityId, PCCProvider.GetPCCItems(PCCProvider.DEFAULT_PROVINCE).Select(m => new SelectListItem { Text = m.Name, Value = m.Id.ToString(), Selected = (m.Id == Model.CityId) }), new { @class = "form-control", @style = "width:175px; display:inline-block;" }))
+                        .Append(Html.DropDownListFor(m => m.CountyId, PCCProvider.GetPCCItems(PCCProvider.DEFAULT_CITY).Select(m => new SelectListItem { Text = m.Name, Value = m.Id.ToString(), Selected = (m.Id == Model.CityId) }), new { @class = "form-control", @style = "width:175px; display:inline-block;" })), null, new { @style = "margin-left:-2px;" })
+    </div>
+}
+
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+
+            //省市地区级联
+            $("#ProvinceId").change(function () {
+                common.loading.open();
+                $.get("/system/pcc", { parentId: $(this).val() }, function (cityCollection) {
+                    var citySel = $("#CityId").empty();
+                    $(cityCollection).each(function () {
+                        citySel.append($("<option value='" + this.Id + "'>" + this.Name + "</option>"));
+                    });
+
+                    $.get("/system/pcc", { parentId: cityCollection[0].Id }, function (countyCollection) {
+                        var countySel = $("#CountyId").empty();
+                        $(countyCollection).each(function () {
+                            countySel.append($("<option value='" + this.Id + "'>" + this.Name + "</option>"));
+                        });
+
+                        common.loading.close();
+                    });
+                });
+            });
+
+            $("#CityId").change(function () {
+                common.loading.open();
+                $.get("/system/pcc", { parentId: $(this).val() }, function (countyCollection) {
+                    var countySel = $("#CountyId").empty();
+                    $(countyCollection).each(function () {
+                        countySel.append($("<option value='" + this.Id + "'>" + this.Name + "</option>"));
+                    });
+
+                    common.loading.close();
+                });
+            });
+        })
+    </script>
+}

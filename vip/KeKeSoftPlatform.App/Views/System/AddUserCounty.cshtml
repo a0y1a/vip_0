@@ -1,0 +1,91 @@
+﻿@model UserCountyAddData
+@{
+    ViewBag.Title = "添加区(县)用户";
+    List<SelectListItem> list = new List<SelectListItem>();
+    using (KeKeSoftPlatformDbContext db = new KeKeSoftPlatformDbContext())
+    {
+        var county = db.LocalPCC.Where(m => m.ParentId <= 1102 && m.Id > 1102 && m.User_County.Count <= 0).ToList();
+        if (county.Any())
+        {
+            list.AddRange(county.Select(m => new SelectListItem { Text = m.Name, Value = m.Id.ToString() }).ToList());
+        }
+    }
+}
+@using (Html.Form())
+{
+    <div class="form-group">
+        <label for="CountyId" class="col-md-4 control-label"><span class="pf-required">*</span> @Html.DisplayNameFor(m => m.CountyId)：</label>
+        <div class="col-md-3">
+            @Html.DropDownListFor(m => m.CountyId, list, new { @class = "form-control", placeholder = "" })
+        </div>
+        <div class="col-md-5 text-left">
+            @Html.ValidationMessageFor(m => m.CountyId)
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="Name" class="col-md-4 control-label"><span class="pf-required">*</span> @Html.DisplayNameFor(m => m.Code)：</label>
+        <div class="col-md-3">
+            @Html.TextBoxFor(m => m.Code, new { @class = "form-control", placeholder = "", maxlength = "10", @disabled = "disabled" })
+        </div>
+        <div class="col-md-5 text-left">
+            @Html.ValidationMessageFor(m => m.Code)
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="Name" class="col-md-4 control-label"><span class="pf-required"></span> @Html.DisplayNameFor(m => m.Name)：</label>
+        <div class="col-md-3">
+            @Html.TextBoxFor(m => m.Name, new { @class = "form-control", placeholder = "", maxlength = "10" })
+        </div>
+        <div class="col-md-5 text-left">
+            @Html.ValidationMessageFor(m => m.Name)
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="Mobile" class="col-md-4 control-label"><span class="pf-required"></span> @Html.DisplayNameFor(m => m.Mobile)：</label>
+        <div class="col-md-3">
+            @Html.TextBoxFor(m => m.Mobile, new { @class = "form-control", placeholder = "", maxlength = "11" })
+        </div>
+        <div class="col-md-5 text-left">
+            @Html.ValidationMessageFor(m => m.Mobile)
+        </div>
+    </div>
+    @*<div class="form-group">
+        <label for="Password" class="col-md-4 control-label"><span class="pf-required">*</span> @Html.DisplayNameFor(m => m.Password)：</label>
+        <div class="col-md-3">
+            @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "", maxlength = "12", value = Model.Password })
+        </div>
+        <div class="col-md-5 text-left">
+            @Html.ValidationMessageFor(m => m.Password)
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="ConfirmPassword" class="col-md-4 control-label"><span class="pf-required">*</span> @Html.DisplayNameFor(m => m.ConfirmPassword)：</label>
+        <div class="col-md-3">
+            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", placeholder = "", maxlength = "12", value = Model.ConfirmPassword })
+        </div>
+        <div class="col-md-5 text-left">
+            @Html.ValidationMessageFor(m => m.ConfirmPassword)
+        </div>
+    </div>*@
+    <div class="form-group">
+        <div class="col-sm-offset-4 col-sm-5">
+            <button type="submit" class="btn btn-primary">
+                <span class="glyphicon glyphicon-saved"></span>
+            添加</button>
+            <a class="btn-info btn" href="/system/UserCountyList" name="" style="margin-left:20px;">
+                <span class="glyphicon glyphicon-remove"></span> 取消
+            </a>
+        </div>
+    </div>
+}
+
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            $("#CountyId").change(function () {
+                $("#Code").prop("value", $(this).val());
+            });
+            $("#CountyId").trigger("change");
+        });
+    </script>
+}

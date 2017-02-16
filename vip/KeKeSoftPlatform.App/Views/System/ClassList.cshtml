@@ -1,0 +1,128 @@
+﻿@model Pager<T_Class>
+@{
+    ViewBag.Title = "班级列表";
+    List<SelectListItem> classTypeList = new List<SelectListItem>() { new SelectListItem { Text = "==全部==", Value = "", Selected = (string.IsNullOrWhiteSpace(Request.QueryString["classType"])) } };
+    classTypeList.AddRange(ClassType.WeiKe.ToSelectDataSource().Select(m => new SelectListItem
+    {
+        Text = m.Text,
+        Value = m.Value,
+        Selected = (string.IsNullOrWhiteSpace(Request.QueryString["classType"]) == false && Request.QueryString["classType"].ToString() == m.Value)
+    }));
+}
+
+@using(Html.Search())
+{
+    Html.Group("名称", Html.TextBox("className", Request.QueryString["className"], new { @style = "width:160px;" }));
+    Html.Group("类型", Html.DropDownList("classType", classTypeList, new { @style = "width:160px" }));
+    using(Html.Group("创建日期"))
+    {
+        @Html.TextBox("minDate", Request.QueryString["minDate"], new { @style = "width:160px;" });
+        <span>--</span>
+        @Html.TextBox("maxDate", Request.QueryString["maxDate"], new { @style = "width:160px;" });
+    }
+}
+
+<a href="/System/DownLoadClassModel" class="btn btn-primary btn-sm pull-left btn-position"><span class="glyphicon glyphicon-download-alt gly-position"></span>下载模板</a>
+<a href="/System/ImportClassData" class="btn btn-primary btn-sm pull-left btn-position"><span class=" glyphicon glyphicon-import gly-position"></span>导入数据</a> 
+<a href="/System/DownLoadClassData" class="btn btn-primary btn-sm pull-left btn-position"><span class="glyphicon glyphicon-download gly-position"></span>导出数据</a> 
+<a href="#" id="editClass" class="btn btn-primary btn-sm pull-left btn-position"><span class="glyphicon glyphicon-edit gly-position"></span>编辑班级</a>  
+<a href="#" id="deleteClass" class="btn btn-primary btn-sm pull-left btn-position"><span class="glyphicon glyphicon-remove gly-position"></span>删除班级</a>
+
+@(Grid.Create<T_Class>().SetDataSource(Model.Data)
+.Column("<input type='checkbox' id='tableCheck'", m => "<input type='checkbox' id='" + m.Id + "'/>").End()
+.Column(m => m.Code).Name("编码").End()
+.Column(m => m.Name).Name("名称").End()
+.Column(m => m.Type).Name("类型").Value(typeof(ClassType)).End()
+.Column("班级人数", m => m.Student.Count).End()
+.Column(m => m.CreateDate).Name("创建日期").Value(m => m.CreateDate.ToString("yyyy-MM-dd")).End().Render())
+
+@Html.Page(Model)
+
+<div id="box"></div>
+
+@section scripts{
+<script src="/Scripts/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript">
+    $("#minDate, #maxDate").click(function () {
+        WdatePicker({ dateFmt: "yyyy-MM-dd" })
+    })
+
+    $("#tableCheck").change(function () {
+        if ($(this).is(":checked")) {
+            $("td").find("input[type='checkbox']").prop("checked", true);
+        } else {
+            $("td").find("input[type='checkbox']").prop("checked", false);
+        }
+    })
+
+    $("#deleteClass").click(function () {
+        if (confirm("确认删除？")) {
+            var classList = $("tbody>tr").find("input[type='checkbox']:checked").map(function () { return $(this).attr("id") }).get().join(",");
+            if (classList.length == 0) {
+                alert("请选择班级！")
+                return false;
+            } else {
+                $.post("/System/DeleteClass", { classIdList: classList }, function (result) {
+                    if (result.IsSuccess) {
+                        var deletedClassIdList = result.Data.split(",");
+                        for (var i = 0; i < deletedClassIdList.length ; i++) {
+                            $("tbody>tr").find("input[type='checkbox']:checked").each(function () {
+                                if ($(this).attr("id") == deletedClassIdList[i]) {
+                                    $(this).closest("tr").remove();
+                                }
+                            })
+                        }
+                        $("tbody>tr").find("input[type='checkbox']:checked").prop("checked", false);
+                    } 
+                    alert(result.Error);
+                })
+            }
+        }
+    })
+
+    $("#editClass").click(function () {
+        var classIdArray = $("tbody>tr").find("input[type='checkbox']:checked").toArray();
+        if (classIdArray.length == 0) {
+            alert("请选择班级！")
+            return false;
+        }
+        if (classIdArray.length > 1) {
+            alert("每次只能编辑一个班级！")
+            return false;
+        }
+        $.get("/System/EditClass", { classId: $(classIdArray[0]).attr("id") }, function (result) {
+            $("#box").empty();
+            $("#box").append(result);
+            $("#box").find("#editClassModal").modal();
+            $.validator.unobtrusive.parse($("#box form"));
+        })
+
+        $("#box").on("change", "#Code", function () {
+            $.post("/System/QueryClassCode", { code: $("#Code").val(), classId: $("#ClassId").val() }, function (result) {
+                if (!result.IsSuccess) {
+                    $("#Code").removeClass("valid").addClass("input-validation-error").css("aria-invalid", true);
+                    $("#validateCode").removeClass("field-validation-valid").addClass("field-validation-error");
+                    if ($("#validateCode").children().length == 0) {
+                        $("#validateCode").append($("<span id='Code-error' class=''>班级编码已经存在！</span>"))
+                    }
+                } else {
+                    $("#Code").attr("data-val-exist", "");
+                }
+            })
+        })
+
+        $("#box").on("click", "#submitForm", function () {
+            if ($("#validateCode").children().length > 0) {
+                return false;
+            }
+            var formJson = $("#box").find("form").serializeArray();
+            $.post("/System/EditClass", formJson, function (result) {
+                $("#close").trigger("click");
+                alert(result.Error);
+                alert(1.2 * 3); 
+            })
+        })
+    })
+</script>
+}
+

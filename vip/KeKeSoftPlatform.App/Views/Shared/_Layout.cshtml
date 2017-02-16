@@ -1,0 +1,83 @@
+﻿@*@using StackExchange.Profiling;*@
+<!DOCTYPE html>
+<html style="height: 100%;">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="renderer" content="webkit" />
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <!-- WARNING: Respond.js doesn't work if you view the page via  -->
+    <!--[if lt IE 9]>
+      <script src="@Url.Content("~/Scripts/html5shiv.min.js")"></script>
+      <script src="@Url.Content("~/Scripts/respond.min.js")"></script>
+    <![endif]-->
+    @RenderSection("head", false)
+</head>
+<body style="background-color: #F6F6F6; height: 100%;">
+    <div class="container" style="margin: auto; background-color: white; height: 100%;">
+        <div class="row">
+            <div class="col-md-12">
+                <nav class="navbar navbar-default" role="navigation">
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav">
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">功能模块一<b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="/system/StudentList">01. 增删改查</a></li>
+                                    <li><a href="/system/FileList">02. 附件上传</a></li>
+                                    <li><a href="/system/DataValidation">03. 数据验证</a></li>
+                                    <li><a href="/system/OperateExcel">04. Excel操作</a></li>
+                                    <li><a href="/system/Config">05. 配置文件</a></li>
+                                    <li><a href="/system/CreateNews">06. 文本编辑</a></li>
+                                    <li><a href="/system/Select2">07. 下拉查询</a></li>
+                                    <li><a href="/system/FontIcon">08. 字体图标</a></li>
+                                    <li><a href="/system/DisplayPCC">09. 省市地区</a></li>
+                                    <li><a href="/system/AlertWindow">10. 弹出窗口</a></li>
+                                    <li><a href="/system/FormatConvert">11. 格式转换</a></li>
+                                    <li><a href="/system/MemoryPager">12. 内存分页</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <ul class="nav navbar-nav">
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">功能模块二<b><span class="caret"></span></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="/system/OperatePage">01. 页面操作</a></li>
+                                    <li><a href="/system/SaveImgage">02. 图片保存</a></li>
+                                    <li><a href="/system/CustomizeColumnList">03. 自定义列</a></li>
+                                    <li><a href="/system/SelectColor">04. 颜色控件</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <ul class="nav navbar-nav">
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">插件使用<b><span class="caret"></span></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="/system/BootstrapFileInput">01. Bootstrap fileinput</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <ul class="nav navbar-nav">
+                            <li><a href="/system/Test">测试</a></li>
+                        </ul>
+                    </div>
+                </nav>
+                <div id="sys_message">
+                    @if (ViewContext.TempData[AlertEntity.ALERT_ENTITY] != null)
+                    {
+                        var alertEntity = ViewContext.TempData[AlertEntity.ALERT_ENTITY] as AlertEntity;
+                        @Html.Partial("Alert", new AlertEntity(alertEntity.Message, alertEntity.Type, alertEntity.CanClose))
+                    }
+                </div>
+                @RenderBody()
+                @*@MiniProfiler.RenderIncludes()*@
+            </div>
+        </div>
+    </div>
+    @Scripts.Render("~/bundles/common")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

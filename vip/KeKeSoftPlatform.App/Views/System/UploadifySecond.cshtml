@@ -1,0 +1,102 @@
+﻿@model UploadifySecondData
+@{
+    ViewBag.Title = "UploadifySecond";
+}
+
+@section head{
+    <link href="/Scripts/uploadify/uploadify.css" rel="stylesheet" />
+}
+
+@using (Html.Form())
+{
+    @Html.HiddenFor(m => m.AddImageList)
+    <div class="form-group" style="height:32px !important; margin-top:20px !important; margin-bottom:0 !important;">
+        <label class="col-md-3 control-label"></label>
+        <div class="col-md-8">
+            <div id="queue"></div>
+            <input id="image_upload" name="image_upload" type="file">
+        </div>
+    </div>
+    <div class="form-group" style="margin-bottom:0 !important;">
+        <label class="col-md-3 control-label"></label>
+        <div class="col-md-6" id="kaoTiImage" style="padding-left:0 !important;">
+            @if (Model.FileDataList.Any())
+            {
+                foreach (var url in Model.FileDataList)
+                {
+                    <div class="col-md-3" style="height:106px !important; padding-right:3px !important; margin-bottom:6px !important;">
+                        <div class="img-container">
+                            <img src="@url" class="thumbnail" alt="暂无附件" style="width:100%; height:100px !important;" />
+                            <span class="divX" name="@url">X</span>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-3 control-label"></label>
+        <div class="col-md-6"><button type="submit" class="btn btn-sm btn-success" style="width:120px; font-size:14px;">提交</button></div>
+    </div>
+}
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" id="modal-content">
+            @*<div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body" id="modal-body">
+            </div>*@
+            <img id="showImgInModal" style="width:100%;" />
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script src="/Scripts/uploadify/jquery.uploadify.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('#image_upload').uploadify({
+                'swf': '/Scripts/uploadify/uploadify.swf',
+                'uploader': '/System/Upload',
+                //按钮显示的文字
+                'buttonText': '上传文件',
+                'progressData': 'percentage',
+                'fileTypeDesc': 'Image Files',
+                //允许上传的文件后缀
+                'fileTypeExts': '*.gif; *.jpg; *.png',
+                'removeCompleted': false,
+                'multi': true,
+                'onUploadSuccess': function (file, data, response) {
+                    $("#image_upload-queue").hide();
+                    var path = eval("(" + data + ")");
+                    $("#AddImageList").val($("#AddImageList").val() + path + ",,,");
+                    var $div = $("<div class='col-md-3' style='height:106px !important; padding-right:3px !important; margin-bottom:6px !important;'></div>");
+                    var imgContainer = $("<div class='img-container'><img src='" + path + "' class='thumbnail' style='width:100%; height:100px !important;' alt='暂无图片' /><span class='divX' name='" + path + "'>X</span></div>");
+                    $div.append(imgContainer);
+                    $("#kaoTiImage").append($div);
+                }
+            });
+
+            $("#kaoTiImage").on("mouseover", ".img-container", function () {
+                $(this).find(".divX").show();
+            }).on("mouseout", ".img-container", function () {
+                $(this).find(".divX").hide();
+            }).on("click", ".divX", function () {
+                if (confirm("确认删除？")) {
+                    $("#AddImageList").val($("#AddImageList").val().replace($(this).attr("name"), ""));
+                    $(this).closest(".col-md-3").remove();
+                }
+            }).on("click", "img", function () {
+                $("#showImgInModal").prop("src", $(this).prop("src"));
+                $("#myModal").modal();
+            })
+        })
+    </script>
+}
+
+
+
+
+

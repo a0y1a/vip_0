@@ -1,0 +1,106 @@
+﻿@model SaveImgageData
+@{
+    ViewBag.Title = "图片保存";
+}
+
+@section head{
+    <link href="/Scripts/uploadify/uploadify.css" rel="stylesheet" />
+}
+
+@using (Html.Form())
+{
+    @Html.HiddenFor(m => m.AddImageList)
+    <div class="form-group">
+        <label class="col-md-3 control-label"></label>
+        <div class="col-md-8 text-danger">
+            1.&nbsp;保存相对路径 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  2.&nbsp;保存图片二进制编码
+        </div>
+    </div>
+    <div class="form-group" style="height:32px !important; margin-top:20px !important; margin-bottom:0 !important;">
+        <label class="col-md-3 control-label"></label>
+        <div class="col-md-8">
+            <div id="queue"></div>
+            <input id="image_upload" name="image_upload" type="file">
+        </div>
+    </div>
+    <div class="form-group" style="margin-bottom:0 !important;">
+        <label class="col-md-3 control-label"></label>
+        <div class="col-md-6" id="kaoTiImage" style="padding-left:0 !important;">
+            @if (Model.ImageDataList.Any())
+            {
+                foreach (var item in Model.ImageDataList)
+                {
+                    <div class="col-md-3" style="height:106px !important; padding-right:3px !important; margin-bottom:6px !important;">
+                        <div class="img-container">
+                            @* 根据相对路径显示图片 *@
+                             <img src="@item.Url" class="thumbnail" alt="暂无图片" style="width:100%; height:100px !important;" />
+                            @* 根据图片二进制Base64编码显示图片 *@
+                            @*<img src="@System.Text.Encoding.Default.GetString(item.ImgageByte)" class="thumbnail" alt="暂无图片" style="width:100%; height:100px !important;" />*@
+                            <span class="divX" name="@item.Url">X</span>
+                        </div>
+                    </div>
+                }
+            }
+            </div>
+        </div>
+    <div class="form-group">
+        <label class="col-md-3 control-label"></label>
+        <div class="col-md-6"><button type="submit" class="btn btn-sm btn-success" style="width:120px; font-size:14px;">提交</button></div>
+    </div>
+}
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" id="modal-content">
+            <img id="showImgInModal" style="width:100%;" />
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script src="/Scripts/uploadify/jquery.uploadify.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('#image_upload').uploadify({
+                'swf': '/Scripts/uploadify/uploadify.swf',
+                'uploader': '/System/Upload',
+                //按钮显示的文字
+                'buttonText': '上传图片',
+                'progressData': 'percentage',
+                'fileTypeDesc': 'Image Files',
+                //允许上传的文件后缀
+                'fileTypeExts': '*.gif; *.jpg; *.png',
+                'removeCompleted': false,
+                'multi': true,
+                'onUploadSuccess': function (file, data, response) {
+                    $("#image_upload-queue").hide();
+                    var path = eval("(" + data + ")");
+                    $("#AddImageList").val($("#AddImageList").val() + path + ",,,");
+                    var $div = $("<div class='col-md-3' style='height:106px !important; padding-right:3px !important; margin-bottom:6px !important;'></div>");
+                    var imgContainer = $("<div class='img-container'><img src='" + path + "' class='thumbnail' style='width:100%; height:100px !important;' alt='暂无图片' /><span class='divX' name='" + path + "'>X</span></div>");
+                    $div.append(imgContainer);
+                    $("#kaoTiImage").append($div);
+                }
+            });
+
+            $("#kaoTiImage").on("mouseover", ".img-container", function () {
+                $(this).find(".divX").show();
+            }).on("mouseout", ".img-container", function () {
+                $(this).find(".divX").hide();
+            }).on("click", ".divX", function () {
+                if (confirm("确认删除？")) {
+                    $("#AddImageList").val($("#AddImageList").val().replace($(this).attr("name"), ""));
+                    $(this).closest(".col-md-3").remove();
+                }
+            }).on("click", "img", function () {
+                $("#showImgInModal").prop("src", $(this).prop("src"));
+                $("#myModal").modal();
+            })
+        })
+    </script>
+}
+
+
+
+
+

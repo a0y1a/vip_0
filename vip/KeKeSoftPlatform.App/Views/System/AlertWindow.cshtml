@@ -1,0 +1,24 @@
+﻿
+@{
+    ViewBag.Title = "弹出窗口";
+}
+
+@section scripts{
+    <script>
+        $(function () {
+            @if (TempData[AlertEntity.ALERT_ENTITY] != null)
+            {
+                <text>common.alert('@((TempData[AlertEntity.ALERT_ENTITY] as AlertEntity).Message)')</text>
+            }
+        })
+
+        $(function () {
+            common.alert("first we need to cite common.js");
+            common.confirm("confirm to execute ?", function () {
+                common.alert("confirmed goes here");
+            }, function () {
+                common.alert("canceled goes here")
+            })
+        })
+    </script>
+}
