@@ -5,30 +5,75 @@
 
 <!DOCTYPE html>
 <html>
-    <head>
-    </head>
-    <body>
-        <div id="app">
-            <p v-bind:title="message" v-on:click="vModifyMessage">Multiline message is:</p>
-            <p>{{message}}</p>
-            <textarea v-model="message"></textarea>
-        </div>
-    </body>
+<head>
+    <meta charset="utf-8" />
+    <title>Index</title>
+    <style type="text/css">
+        #app2 {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <p v-bind:title="message" v-on:click="vModifyMessage">click me to change message</p>
+        <div>{{message}}</div>
+        <textarea v-model="message"></textarea>
+        <p v-if="isShow" v-on:click="reverseMessage($event)">Whether show p sentence.</p>
+        <ul>
+            <li v-for="item in grocery">{{item.name}}</li>
+            <todo></todo>
+        </ul>
+    </div>
+
+    <div id="app2" title="app2Title">
+        <p v-on:click="changeData">{{a}}</p>
+    </div>
+</body>
 </html>
 
 <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/vue/2.1.3/vue.js"></script>
 <script type="text/javascript">
-    new Vue({
+    Vue.component("todo", {
+        template: "<li>This is a todo</li>"
+    })
+
+    var vm = new Vue({
         el: '#app',
         data: {
-            message: "" 
+            message: "",
+            isShow: false,
+            grocery: [
+                { name: "bread" },
+                { name: "fruit" },
+                { name: "no other goods" }
+            ]
         },
         methods: {
             vModifyMessage: function () {
-                this.messsage = "test_message";
+                var date = new Date();
+                this.message = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+                this.isShow = !this.isShow;
+                this.grocery.push({ name: date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() });
+            },
+            reverseMessage: function ($event) {
+                $event.currentTarget.firstChild.nodeValue = $event.currentTarget.firstChild.nodeValue.split('').reverse().join('');
             }
         }
     })
+
+    var app2data = { a: "33" };
+    var vm2 = new Vue({
+        el: "#app2",
+        data: app2data,
+        methods: {
+            changeData: function () {
+                this.a = "aaa";
+                console.info(this.a);
+            }
+        }
+    })
+    console.info(vm2.$changeData.a)
 </script>
 
-//问题说明： 点击第一个p标签后，为什么第二个p标签中的内容和文本域textarea中的内容没有变为test_message?
+

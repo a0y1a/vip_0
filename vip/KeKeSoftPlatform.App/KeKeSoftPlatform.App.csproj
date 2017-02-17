@@ -373,6 +373,7 @@
     <Content Include="Scripts\jquery-1.9.1.min.map" />
     <Content Include="Scripts\jquery-2.2.1.min.map" />
     <Content Include="Views\System\Test2.cshtml" />
+    <Content Include="Views\System\Test3.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KeKeSoftPlatform.Common\KeKeSoftPlatform.Common.csproj">

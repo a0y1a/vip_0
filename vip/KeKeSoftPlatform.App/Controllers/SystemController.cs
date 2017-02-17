@@ -1782,6 +1782,11 @@ namespace KeKeSoftPlatform.App.Controllers
             return View();
         }
 
+        public ActionResult Test3()
+        {
+            return View();
+        }
+
         [HttpPost]
         public ActionResult Test(TestData model)
         {
