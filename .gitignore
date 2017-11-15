@@ -3,3 +3,9 @@
 ################################################################################
 
 /vip/KeKeSoftPlatform.Common/bin/Debug
+/vip/KeKeSoftPlatform.Core/bin/Debug
+/vip/KeKeSoftPlatform.Core/obj/Debug
+/vip/KeKeSoftPlatform.Common/obj/Debug
+/vip/KeKeSoftPlatform.App/obj/Debug
+/vip/KeKeSoftPlatform.App/bin
+/vip/.vs/KeKeSoftPlatform/v15
